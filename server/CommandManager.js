@@ -7,13 +7,13 @@ var params = {
 };
 
 var functions = {
-	commit: function (message, callback) {
+	commit: function commit (message, callback) {
 		this.repo.commit(message, callback)
 	},
-	push: function (callback) {
+	push: function push (callback) {
 		this.repo.push("origin", "master", callback)
 	},
-	changeline: function (linenumber, code, callback) {
+	changeline: function changeline (linenumber, code, callback) {
 		fs.readFile(this.filename, {encoding: "utf8"}, function (err, data) {
 			lines = data.split("\n");
 
@@ -53,4 +53,4 @@ CommandManager.prototype.commands = {
 	}
 };
 
-module.exports = CommandManager();
+module.exports = CommandManager;
