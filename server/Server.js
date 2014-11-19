@@ -3,18 +3,15 @@ function Server (io, commandManager, voteManager, settings) {
 	this.settings = settings;
 	this.commandManager = commandManager;
 	this.voteManager = voteManager;
-
-	this.timeTillNextVote = 0;
 	this.playerCount = 0;
 
 	this.current_command = "";
 	this.current_parameters = [];
 
 	this.bindIO();
-	this.voteManager.setOptions(this.commandManager.commands);
+	this.voteOnNewCommand();
 
 	setInterval(this.sendPlayerCount.bind(this), 2000);
-	this.voteUpdateTimeout = setTimeout(this.voteupdate.bind(this), 2000);
 }
 
 Server.prototype.bindIO = function bindIO () {
@@ -84,7 +81,7 @@ Server.prototype.executeCurrentCommand = function executeCurrentCommand () {
 
 Server.prototype.voteOnNewCommand = function voteOnNewCommand () {
 	this.voteManager.setOptions(this.commandManager.commands);
-	this.timeTillNextVote = this.settings.timeBetweenVotes;
+	this.timeTillNextVote = Date.now() + this.settings.timeBetweenVotes;
 	this.setVoteTimeout();
 };
 
@@ -102,3 +99,5 @@ Server.prototype.setVoteTimeout = function setVoteTimeout () {
 Server.prototype.getVoteOption = function getVoteOption () {
 	return this.voteManager.options || this.commandManager.getParameter(this.current_command, this.current_parameters.length);
 };
+
+module.exports = Server;
