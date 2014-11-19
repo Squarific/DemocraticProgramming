@@ -1,9 +1,10 @@
 function VoteManager (options) {
-	this.options = options; //Array of strings
+	this.options = options; //Array of strings, if empty every string is allowed
 	this.votes = [];
 }
 
-VoteManager.prototype.reset = function reset () {
+VoteManager.prototype.setOptions = function setOptions (options) {
+	this.options = options;
 	this.votes = [];
 };
 
@@ -28,6 +29,9 @@ VoteManager.prototype.hasAlreadyVoted = function hasAlreadyVoted (id) {
 };
 
 VoteManager.prototype.isValidOption = function isValidOption (option) {
+	if (this.options.length == 0)
+		return true;
+
 	for (var optionKey = 0; optionKey < this.options.length; optionKey) {
 		if (this.options[optionKey] == option) {
 			return true;
@@ -65,6 +69,7 @@ VoteManager.prototype.getWinner = function getWinner () {
 };
 
 VoteManager.prototype.getPropabilityWinner = function getPropabilityWinner () {
+	if (this.votes.length == 0) return false;
 	return this.votes[Math.floor(Math.random() * this.votes.length)].option;
 };
 

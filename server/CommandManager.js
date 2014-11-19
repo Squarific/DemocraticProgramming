@@ -17,8 +17,10 @@ var functions = {
 		fs.readFile(this.filename, {encoding: "utf8"}, function (err, data) {
 			lines = data.split("\n");
 
+			linenumber = parseFloat(linenumber)
+			
 			if (Math.min(linenumber) !== Math.max(linenumber)) {
-				lines.splice(Math.max(linenumber), 0, code);
+				lines.splice(Math.min(linenumber), 0, code);
 			} else {
 				lines[linenumber - 1] = code;
 			}
@@ -38,6 +40,20 @@ CommandManager.prototype.runcommand = function runcommand (command, params, call
 	}
 };
 
+CommandManager.prototype.requiredParameters = function requiredParameters (command) {
+	if (!this.commands[command]) {
+		return false;
+	}
+	return this.commands[command].parameters.length;
+};
+
+CommandManager.prototype.getParameter = function getParameter (command, param) {
+	if (!this.commands[command]) {
+		return false;
+	}
+	return this.commands[command].parameters[param];
+};
+
 CommandManager.prototype.commands = {
 	commit: {
 		parameters: [params.commitmessage],
@@ -52,5 +68,10 @@ CommandManager.prototype.commands = {
 		exec: functions.changeline
 	}
 };
+
+CommandManager.prototype.commandList = [];
+for (var k in CommandManager.prototype.commands) {
+	CommandManager.prototype.commandList.push(k);
+}
 
 module.exports = CommandManager;
