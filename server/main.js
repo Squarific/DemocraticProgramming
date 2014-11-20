@@ -2,7 +2,7 @@ var CommandManager = require("./CommandManager.js");
 var VoteManager = require("./VoteManager.js");
 var IoServer = require("socket.io");
 var Server = require("./Server.js");
-var Git = require("gittens");
+var Git = require("./gittens/main.js");
 
 Git.open("./data", function (err, repo) {
 	if (err) throw err;
