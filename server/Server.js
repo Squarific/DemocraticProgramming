@@ -72,7 +72,10 @@ Server.prototype.executeCurrentCommand = function executeCurrentCommand () {
 		this.commandManager.runCommand(
 			this.current_command,
 			this.current_parameters,
-			this.voteOnNewCommand.bind(this)
+			function (err) {
+				if (err) console.log("WARNING: Couldn't execute command '" + this.current_command "' with parameters '", this.current_parameters, "' Error: ", err);
+				this.voteOnNewCommand();
+			}.bind(this)
 		);
 	} else {
 		this.voteOnNextArgument();

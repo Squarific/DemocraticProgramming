@@ -8,22 +8,23 @@ var params = {
 
 var functions = {
 	commit: function commit (message, callback) {
-		this.repo.commit(message, callback)
-	},
-	push: function push (callback) {
-		this.repo.push("origin", "master", callback)
+		this.repo.add("*", function () {
+			this.repo.commit(message, function () {
+				this.repo.push("origin", "master", callback);
+			})
+		})
 	},
 	changeline: function changeline (linenumber, code, callback) {
 		fs.readFile(this.filename, {encoding: "utf8"}, function (err, data) {
 			lines = data.split("\n");
-
-			linenumber = parseFloat(linenumber)
+			linenumber = parseFloat(linenumber);
 			
 			if (Math.min(linenumber) !== Math.max(linenumber)) {
 				lines.splice(Math.min(linenumber), 0, code);
 			} else {
 				lines[linenumber - 1] = code;
 			}
+
 			fs.writeFile(this.filename, lines.join("\n"), callback);
 		});
 	}
@@ -58,10 +59,6 @@ CommandManager.prototype.commands = {
 	commit: {
 		parameters: [params.commitmessage],
 		exec: functions.commit
-	},
-	push: {
-		parameters: [],
-		exec: functions.push
 	},
 	changeline: {
 		parameters: [params.linenumber, params.code],
