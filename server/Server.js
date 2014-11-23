@@ -3,50 +3,52 @@ function Server (io, commandManager, voteManager, settings) {
 	this.settings = settings;
 	this.commandManager = commandManager;
 	this.voteManager = voteManager;
-	this.playerCount = 0;
+	this.playercount = 0;
 
 	this.current_command = "";
 	this.current_parameters = [];
 
 	this.bindIO();
 	this.voteOnNewCommand();
-
-	setInterval(this.sendPlayerCount.bind(this), 2000);
 }
 
 Server.prototype.bindIO = function bindIO () {
-	var current_server = this,
-		voteManager = this.voteManager,
-		commandManager = this.commandManager;
-
 	this.io.on("connection", function (socket) {
-		socket.emit("voteoptions", this.getVoteOption());
-		socket.emit("playercount", current_server.playercount);
-
-		socket.on("connect", function () {
-			current_server.playercount += 1;
-		});
+		this.sendVoteOptions(socket);
+		this.playercount += 1;
+		this.io.emit("playercount", this.playercount);
 
 		socket.on("vote", function (option) {
-			voteManager.vote(socket.id, option);
+
+			//Try to vote this option, if succeeds tell the other clients
+			if (this.voteManager.vote(socket.id, option)) {
+				this.io.emit("vote", option);
+			}
+
+			// Lower the wait when a vote is received but only
+			// if that doesn't go below the minimum wait
 			if (this.timeTillNextVote > this.settings.lowerVoteTimeAbove) {
 				this.timeTillNextVote -= this.settings.lowerVoteTimeWith;
 			}
-		});
+		}.bind(this));
 
 		socket.on("disconnect", function () {
-			current_server.playercount -= 1;
+			this.playercount -= 1;
+			this.io.emit("playercount", this.playercount);
 
-			if (current_server.playercount < 0) {
+			if (this.playercount < 0) {
 				console.log("WARNING: The playercount dropped below 0 (?). I went ahead and reset it to 0.");
 			}
-		});
-	});
-
+		}.bind(this));
+	}.bind(this));
 };
 
-Server.prototype.sendPlayerCount = function sendPlayerCount () {
-	this.io.emit("playercount", this.playerCount);
+Server.prototype.sendVoteOptions = function setVoteOptions (socket) {
+	var target = socket || this.io;
+	target.emit("voteoptions", {
+		timeTillNextVote: this.timeTillNextVote - Date.now(),
+		options: this.getVoteOption()
+	});
 };
 
 Server.prototype.voteupdate = function voteupdate () {
@@ -73,34 +75,34 @@ Server.prototype.executeCurrentCommand = function executeCurrentCommand () {
 			this.current_command,
 			this.current_parameters,
 			function (err) {
-				if (err) console.log("WARNING: Couldn't execute command '" + this.current_command "' with parameters '", this.current_parameters, "' Error: ", err);
-				this.voteOnNewCommand();
+				if (err) console.log("WARNING: Couldn't execute command '" + this.current_command + "' with parameters '", this.current_parameters, "' Error: ", err);
+				// Vote on a new command
+				this.voteManager.setOptions(this.commandManager.commandList);
+				this.doNextVote();
 			}.bind(this)
 		);
 	} else {
-		this.voteOnNextArgument();
+		// Allow a vote on any string
+		this.voteManager.setOptions([]);
+		this.doNextVote();
 	}
 };
 
-Server.prototype.voteOnNewCommand = function voteOnNewCommand () {
-	this.voteManager.setOptions(this.commandManager.commands);
+Server.prototype.doNextVote = function doNextVote () {
+	// Prepare for the next vote
+	this.sendVoteOptions();
 	this.timeTillNextVote = Date.now() + this.settings.timeBetweenVotes;
-	this.setVoteTimeout();
-};
-
-Server.prototype.voteOnNextArgument = function voteOnNextArgument () {
-	this.voteManager.setOptions([]);
-	this.timeTillNextVote = this.settings.timeBetweenVotes;
-	this.setVoteTimeout();
-};
-
-Server.prototype.setVoteTimeout = function setVoteTimeout () {
 	clearTimeout(this.voteUpdateTimeout);
 	this.voteUpdateTimeout = setTimeout(this.voteupdate.bind(this), 2000);
 };
 
 Server.prototype.getVoteOption = function getVoteOption () {
-	return this.voteManager.options || this.commandManager.getParameter(this.current_command, this.current_parameters.length);
+	// Return the current options or if no options are set return
+	// The paremeter we are voting on and all the voted options
+	return this.voteManager.options || {
+		parameter: this.commandManager.getParameter(this.current_command, this.current_parameters.length),
+		currently_voted: this.voteManager.getVoteCounts()
+	};
 };
 
 module.exports = Server;

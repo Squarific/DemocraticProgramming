@@ -4,7 +4,7 @@ function VoteManager (options) {
 }
 
 VoteManager.prototype.setOptions = function setOptions (options) {
-	this.options = options;
+	this.options = options || [];
 	this.votes = [];
 };
 
@@ -16,6 +16,7 @@ VoteManager.prototype.vote = function vote (id, option) {
 		return false;
 
 	this.votes.push({id: id, option: option});
+	return true;
 };
 
 VoteManager.prototype.hasAlreadyVoted = function hasAlreadyVoted (id) {
