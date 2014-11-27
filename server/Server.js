@@ -16,6 +16,7 @@ function Server (io, commandManager, voteManager, settings) {
 	// Vote on a new command
 	this.voteManager.setOptions(this.commandManager.commandList);
 	this.doNextVote();
+	this.voteUpdateTimeout = setTimeout(this.voteupdate.bind(this), 2000);
 }
 
 Server.prototype.bindIO = function bindIO () {
@@ -67,36 +68,51 @@ Server.prototype.sendVoteOptions = function setVoteOptions (socket) {
 
 Server.prototype.voteupdate = function voteupdate () {
 	if (this.timeTillNextVote - Date.now() <= 0) {
-		if (!this.current_command) {
-			var vote_winner = this.voteManager.getPropabilityWinner();
+		var vote_winner = this.voteManager.getPropabilityWinner();
 
+		// Time's up, if we don't have one yet lets see what command won
+		if (!this.current_command) {
 			if (!(vote_winner in this.commandManager.commands)) {
+				// That's not a valid command o.0
 				console.log("WARNING: Voted option '" + vote_winner + "' was not a valid command!");
 				this.voteOnNewCommand();
+				this.voteUpdateTimeout = setTimeout(this.voteupdate.bind(this), 2000);
 				return;
 			}
 
-			this.current_command = this.vote_winner;
+			this.current_command = vote_winner;
+			console.log(this.current_command, "has won the vote.");
+		} else {
+			// We already got a command, lets add it as a parameter
+			this.current_parameters.push(vote_winner);
 		}
 
+		// Ok so we got a command now, lets execute it
 		this.executeCurrentCommand();
-	}
+	}	
+	this.voteUpdateTimeout = setTimeout(this.voteupdate.bind(this), 2000);
+};
+
+Server.prototype.voteOnNewCommand = function voteOnNewCommand () {
+	this.current_parameters = [];
+	this.voteManager.setOptions(this.commandManager.commandList);
+	this.doNextVote();
 };
 
 Server.prototype.executeCurrentCommand = function executeCurrentCommand () {
-	if (this.commandManager.requiredArguments(this.current_command) == this.current_parameters.length) {
+	if (this.commandManager.requiredParameters(this.current_command) <= this.current_parameters.length) {
+		// We have the required parameters, lets execute
 		this.commandManager.runCommand(
 			this.current_command,
 			this.current_parameters,
 			function (err) {
 				if (err) console.log("WARNING: Couldn't execute command '" + this.current_command + "' with parameters '", this.current_parameters, "' Error: ", err);
 				// Vote on a new command
-				this.voteManager.setOptions(this.commandManager.commandList);
-				this.doNextVote();
+				this.voteOnNewCommand();
 			}.bind(this)
 		);
 	} else {
-		// Allow a vote on any string
+		// Allow a vote on any string since we still need a parameter
 		this.voteManager.setOptions([]);
 		this.doNextVote();
 	}
@@ -104,10 +120,8 @@ Server.prototype.executeCurrentCommand = function executeCurrentCommand () {
 
 Server.prototype.doNextVote = function doNextVote () {
 	// Prepare for the next vote
-	this.sendVoteOptions();
 	this.timeTillNextVote = Date.now() + this.settings.timeBetweenVotes;
-	clearTimeout(this.voteUpdateTimeout);
-	this.voteUpdateTimeout = setTimeout(this.voteupdate.bind(this), 2000);
+	this.sendVoteOptions();
 };
 
 Server.prototype.getVoteOption = function getVoteOption () {

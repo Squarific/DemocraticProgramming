@@ -25,8 +25,8 @@ var functions = {
 				lines[linenumber - 1] = code;
 			}
 
-			fs.writeFile(this.filename, lines.join("\n"), callback);
-		});
+			fs.writeFile(this.filename, lines.join("\n"), {encoding: "utf8"}, callback);
+		}.bind(this));
 	},
 	deleteline: function deleteline (linenumber, callback) {
 		fs.readFile(this.filename, {encoding: "utf8"}, function (err, data) {
@@ -43,9 +43,11 @@ function CommandManager (filename, repo) {
 	this.repo = repo;
 }
 
-CommandManager.prototype.runcommand = function runcommand (command, params, callback) {
-	if (typeof this.commands[command].exec == "function") {
+CommandManager.prototype.runCommand = function runCommand (command, params, callback) {
+	if (this.commands[command] && typeof this.commands[command].exec == "function") {
 		this.commands[command].exec.apply(this, params, callback);
+	} else {
+		callback("Command " + command + " not found");
 	}
 };
 
