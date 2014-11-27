@@ -3,17 +3,22 @@ function Server (io, commandManager, voteManager, settings) {
 	this.settings = settings;
 	this.commandManager = commandManager;
 	this.voteManager = voteManager;
-	this.playercount = 0;
 
+	this.playercount = 0;
 	this.current_command = "";
 	this.current_parameters = [];
 
+	// Bind socket events
 	this.bindIO();
-	this.voteOnNewCommand();
+
+	// Vote on a new command
+	this.voteManager.setOptions(this.commandManager.commandList);
+	this.doNextVote();
 }
 
 Server.prototype.bindIO = function bindIO () {
 	this.io.on("connection", function (socket) {
+		socket.emit("timebetweenvotes", this.settings.timeBetweenVotes);
 		this.sendVoteOptions(socket);
 		this.playercount += 1;
 		this.io.emit("playercount", this.playercount);

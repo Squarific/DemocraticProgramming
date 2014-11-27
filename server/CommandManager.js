@@ -27,6 +27,14 @@ var functions = {
 
 			fs.writeFile(this.filename, lines.join("\n"), callback);
 		});
+	},
+	deleteline: function deleteline (linenumber, callback) {
+		fs.readFile(this.filename, {encoding: "utf8"}, function (err, data) {
+			lines = data.split("\n");
+			linenumber = Math.round(parseFloat(linenumber));
+			lines.splice(linenumber, 1);
+			fs.writeFile(this.filename, lines.join("\n"), callback);
+		});
 	}
 };
 
@@ -63,6 +71,10 @@ CommandManager.prototype.commands = {
 	changeline: {
 		parameters: [params.linenumber, params.code],
 		exec: functions.changeline
+	},
+	deleteline: {
+		parameters: [params.linenumber],
+		exec: functions.deleteline
 	}
 };
 

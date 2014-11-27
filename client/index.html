@@ -11,20 +11,37 @@
 	</head>
 	<body>
 		<div class="title">
-			<span class="righttitle smalltitle">Status: <span id="connectionstatus">Not connected.</span></span>
-			<span class="righttitle smalltitle usercount">There are <span id="usercount">x</span> user(s)</span>
 			<span class="lefttitle">Democratic Programming</span>
+			<span class="righttitle">
+				<span class="smalltitle">Status: <span id="connectionstatus">Not connected.</span></span>
+				<span class="smalltitle usercount">There are <span id="usercount">x</span> user(s)</span>
+			</span>
 			<div style="clear:both;"></div>
 		</div>
-		<div id="console" class="field"></div>
+		<div id="votefield" class="field"></div>
+		<div id="chat" class="field"></div>
 		<div id="help" class="field">
-			<span class="text-title">What is Democratic Programming?</span><br/><br/>
-		</div>
-		<div id="console" class="field"></div>
-		<div id="console" class="field"></div>
+			<h1>Programming togheter</h1>
+			<h2>What is Democratic Programming?</h2>
+			This webapp lets visitors vote on what to do with the code.
+			<h2>Possible commands</h2>
+			<h3>changeline</h3>
+			This command changes or creates a line of code.<br/>
+			The first argument will be the code inserted at the given line. <br/>
+			The second argument is the line number, if it is an integer the specified line will be changed.<br/>
+			If it is a float then a new line will be inserted between min(line number) and max(line number)
+			<h3>deleteline</h3>
+			This command deletes a line of code <br/>
+			The first argument is the line number at which to delete a line.
+			<h3>Commit</h3>
+			This command will add the file to git, commit it and push it to the repository (__REPOSITORY HERE__).<br/>
+			The first argument is the commit message.
 
 		</div>
+		<div id="code" class="field"></div>
+		<div style="clear:both"></div>
 		<script src="scripts/socket.io.js"></script>
+		<script src="scripts/Poll.js"></script>
 		<script src="scripts/main.js"></script>
 		<!-- Go to www.addthis.com/dashboard to customize your tools -->
 		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-53c4fbf2311fe8f1"></script>
