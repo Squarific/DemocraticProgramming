@@ -19,6 +19,20 @@ VoteManager.prototype.vote = function vote (id, option) {
 	return true;
 };
 
+VoteManager.prototype.changeVote = function changeVote (id, option) {
+	if (!this.isValidOption(option))
+		return false;
+
+	for (var voteKey = 0; voteKey < this.votes.length; voteKey++) {
+		if (this.votes[voteKey].id == id) {
+			this.votes[voteKey].option = option;
+			return true;
+		}
+	}
+
+	return false;
+}
+
 VoteManager.prototype.hasAlreadyVoted = function hasAlreadyVoted (id) {
 	for (var voteKey = 0; voteKey < this.votes.length; voteKey++) {
 		if (this.votes[voteKey].id == id) {
@@ -33,7 +47,7 @@ VoteManager.prototype.isValidOption = function isValidOption (option) {
 	if (this.options.length == 0)
 		return true;
 
-	for (var optionKey = 0; optionKey < this.options.length; optionKey) {
+	for (var optionKey = 0; optionKey < this.options.length; optionKey++) {
 		if (this.options[optionKey] == option) {
 			return true;
 		}

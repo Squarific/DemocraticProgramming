@@ -32,9 +32,11 @@ Server.prototype.bindIO = function bindIO () {
 			// And inform the client of success
 			if (this.voteManager.vote(socket.id, option)) {
 				this.io.emit("vote", option);
-				callback(true);
+				callback(option);
+			} else if (this.voteManager.changeVote(socket.id, option)) {
+				callback(option);
 			} else {
-				callback("You have already voted!");
+				callback("ILLEGAL");
 			}
 
 			// Lower the wait when a vote is received but only
@@ -49,7 +51,7 @@ Server.prototype.bindIO = function bindIO () {
 			this.io.emit("playercount", this.playercount);
 
 			if (this.playercount < 0) {
-				console.log("WARNING: The playercount dropped below 0 (?). I went ahead and reset it to 0.");
+				console.log("WARNING: The playercount dropped below 0 (?). I went ahead and reset it for you.");
 			}
 		}.bind(this));
 	}.bind(this));

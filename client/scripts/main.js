@@ -27,8 +27,9 @@ function Client () {
 		}
 		this.poll = new Poll(timebetween, votefield, function (option) {
 			this.socket.emit("vote", option, function (data) {
+				this.poll.statusTextDom.innerHTML = "<h2>You have voted for: " + data + "</h2>";
 				console.log("Vote response: ", data);
-			});
+			}.bind(this));
 		}.bind(this));
 	}.bind(this));
 

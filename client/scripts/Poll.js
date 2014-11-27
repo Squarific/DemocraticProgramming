@@ -4,6 +4,7 @@ function Poll (timebetween, container, votecallback) {
 	this.container = container;
 	this.votecallback = votecallback;
 
+	this.statusTextDom = this.container.appendChild(document.createElement("span"));
 	this.pollTimeDom = this.createPollTimeDom(container);
 	votetext = this.container.appendChild(document.createElement("span"));
 	votetext.innerHTML = "<h2>Vote for one of the following options:</h2>";
