@@ -1,7 +1,14 @@
-function Poll (timebetween, container) {
+function Poll (timebetween, container, votecallback) {
 	this.timebetween = timebetween;
 	this.timeTillNextVote = 0;
+	this.container = container;
+	this.votecallback = votecallback;
+
 	this.pollTimeDom = this.createPollTimeDom(container);
+	votetext = this.container.appendChild(document.createElement("span"));
+	votetext.innerHTML = "<h2>Vote for one of the following options:</h2>";
+	this.voteOptionsDom = container.appendChild(document.createElement("div"));
+	
 	requestAnimationFrame(this.update.bind(this));
 }
 
@@ -21,6 +28,33 @@ Poll.prototype.createPollTimeDom = function createPollTimeDom (container) {
 	return pollTimeDom;
 };
 
+Poll.prototype.vote = function vote (option) {
+	this.votecallback(option);
+};
+
+Poll.prototype.addVoteOption = function addVoteOption (container, option) {
+	var optionDom = container.appendChild(document.createElement("div"));
+	optionDom.classList.add("voteoption");
+	optionDom.innerHTML = option;
+	optionDom.addEventListener("click", this.vote.bind(this, option));
+};
+
+Poll.prototype.setVoteOptionsFromList = function setVoteOptionsFromList (options) {
+	while (this.voteOptionsDom.firstChild) {
+		this.voteOptionsDom.removeChild(this.voteOptionsDom.firstChild);
+	}
+
+	for (var k = 0; k < options.length; k++) {
+		this.addVoteOption(this.voteOptionsDom, options[k]);
+	}
+};
+
 Poll.prototype.setVoteData = function setVoteData (data) {
 	this.timeTillNextVote = Date.now() + data.timeTillNextVote;
+	console.log(data);
+	if (typeof data.options.length == "number") {
+		this.setVoteOptionsFromList(data.options);
+	} else {
+		this.setVoteOptionsFromVotes(data.options);
+	}
 };

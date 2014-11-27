@@ -63,6 +63,18 @@ body {
 	transition-duration:0.1s;
 }
 
+.voteoption {
+	padding:5px;
+	background:rgb(136, 128, 103);
+	cursor:pointer;
+	margin-top:10px;
+	color:white;
+}
+
+.voteoption:hover {
+	background:rgb(96, 89, 70);
+}
+
 .polltimebar {
 	padding:5px;
 	background:rgba(36, 116, 37, 0.5);
