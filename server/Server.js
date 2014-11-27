@@ -1,3 +1,5 @@
+function emptyfunction () {}
+
 function Server (io, commandManager, voteManager, settings) {
 	this.io = io;
 	this.settings = settings;
@@ -23,11 +25,16 @@ Server.prototype.bindIO = function bindIO () {
 		this.playercount += 1;
 		this.io.emit("playercount", this.playercount);
 
-		socket.on("vote", function (option) {
+		socket.on("vote", function (option, callback) {
+			callback = callback || emptyfunction;
 
-			//Try to vote this option, if succeeds tell the other clients
+			// Try to vote this option, if succeeds tell the other clients
+			// And inform the client of success
 			if (this.voteManager.vote(socket.id, option)) {
 				this.io.emit("vote", option);
+				callback(true);
+			} else {
+				callback("You have already voted!");
 			}
 
 			// Lower the wait when a vote is received but only
