@@ -91,6 +91,7 @@ Server.prototype.voteupdate = function voteupdate () {
 		this.executeCurrentCommand();
 	}	
 	this.voteUpdateTimeout = setTimeout(this.voteupdate.bind(this), 2000);
+	console.log("voteupdate");
 };
 
 Server.prototype.voteOnNewCommand = function voteOnNewCommand () {
@@ -107,6 +108,7 @@ Server.prototype.executeCurrentCommand = function executeCurrentCommand () {
 			this.current_parameters,
 			function (err) {
 				if (err) console.log("WARNING: Couldn't execute command '" + this.current_command + "' with parameters '", this.current_parameters, "' Error: ", err);
+				console.log("Ran command ", this.current_command);
 				// Vote on a new command
 				this.voteOnNewCommand();
 			}.bind(this)
