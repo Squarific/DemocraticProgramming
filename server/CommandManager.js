@@ -45,7 +45,9 @@ function CommandManager (filename, repo) {
 
 CommandManager.prototype.runCommand = function runCommand (command, params, callback) {
 	if (this.commands[command] && typeof this.commands[command].exec == "function") {
-		this.commands[command].exec.apply(this, params.slice().push(callback));
+		var argArray = params.slice(); // Make a copy of the array
+		argArray.push(callback);
+		this.commands[command].exec.apply(this, argArray);
 	} else {
 		callback("Command " + command + " not found");
 	}
