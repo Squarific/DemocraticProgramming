@@ -37,6 +37,12 @@ var functions = {
 		fs.readFile(this.filename, {encoding: "utf8"}, function (err, data) {
 			lines = data.split("\n");
 			linenumber = Math.round(parseFloat(linenumber));
+
+			if (isNaN(linenumber)) {
+				callback("That is not parseable as a number!");
+				return;
+			}
+
 			lines.splice(linenumber, 1);
 			fs.writeFile(this.filename, lines.join("\n"), callback);
 		});

@@ -90,7 +90,6 @@ Server.prototype.voteupdate = function voteupdate () {
 			}
 
 			this.current_command = vote_winner;
-			console.log(this.current_command, "has won the vote.");
 		} else {
 			// We already got a command, lets add it as a parameter
 			this.current_parameters.push(vote_winner);
