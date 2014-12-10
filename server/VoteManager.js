@@ -83,7 +83,7 @@ VoteManager.prototype.getWinner = function getWinner () {
 	return biggest;
 };
 
-VoteManager.prototype.getPropabilityWinner = function getPropabilityWinner () {
+VoteManager.prototype.getProbabilityWinner = function getPropabilityWinner () {
 	if (this.votes.length == 0) return false;
 	return this.votes[Math.floor(Math.random() * this.votes.length)].option;
 };

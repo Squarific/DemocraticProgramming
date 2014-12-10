@@ -70,7 +70,7 @@ Server.prototype.sendVoteOptions = function setVoteOptions (socket) {
 
 Server.prototype.voteupdate = function voteupdate () {
 	if (this.timeTillNextVote - Date.now() <= 0) {
-		var vote_winner = this.voteManager.getPropabilityWinner();
+		var vote_winner = this.voteManager.getProbabilityWinner();
 
 		// Time's up, if we don't have one yet lets see what command won
 		if (!this.current_command) {
