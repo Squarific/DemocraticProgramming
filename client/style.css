@@ -88,6 +88,24 @@ body {
 	background:gray;
 }
 
+.inputcontainer-poll {
+	margin-top:30px;
+}
+
+.inputcontainer-poll input {
+	width:60%;
+	padding:4px;
+}
+
+.button-poll-vote {
+	display:inline-block;
+	width:30%;
+	float:right;
+	text-align:center;
+	margin:0;
+	padding:4px;
+}
+
 #connectionstatus, #usercount {
 	transition-duration:0;
 }

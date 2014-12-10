@@ -9,6 +9,15 @@ function Poll (timebetween, container, votecallback) {
 	votetext = this.container.appendChild(document.createElement("span"));
 	votetext.innerHTML = "<h2>Vote for one of the following options:</h2>";
 	this.voteOptionsDom = container.appendChild(document.createElement("div"));
+
+	this.inputContainerDom = this.container.appendChild(document.createElement("div"));
+	this.inputContainerDom.classList.add("inputcontainer-poll");
+	this.input = this.inputContainerDom.appendChild(document.createElement("input"));
+	button = this.inputContainerDom.appendChild(document.createElement("div"));
+	button.classList.add("button-poll-vote");
+	button.classList.add("voteoption");
+	button.appendChild(document.createTextNode("Vote!"));
+	button.addEventListener("click", this.voteinput.bind(this));
 	
 	requestAnimationFrame(this.update.bind(this));
 }
@@ -27,6 +36,10 @@ Poll.prototype.createPollTimeDom = function createPollTimeDom (container) {
 	pollTimeDom.classList.add("polltimebar");
 
 	return pollTimeDom;
+};
+
+Poll.prototype.voteinput = function () {
+	this.vote(this.input.value);
 };
 
 Poll.prototype.vote = function vote (option) {
