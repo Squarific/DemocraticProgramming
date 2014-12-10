@@ -77,6 +77,8 @@ Server.prototype.voteupdate = function voteupdate () {
 			if (!vote_winner && typeof vote_winner == "boolean") {
 				console.log("No valid vote casted, giving more time.");
 				this.timeTillNextVote += this.settings.timeBetweenVotes;
+				this.doNextVote();
+				this.voteUpdateTimeout = setTimeout(this.voteupdate.bind(this), 2000);
 				return;
 			}
 			if (!(vote_winner in this.commandManager.commands)) {
@@ -101,6 +103,7 @@ Server.prototype.voteupdate = function voteupdate () {
 };
 
 Server.prototype.voteOnNewCommand = function voteOnNewCommand () {
+	this.current_command = "";
 	this.current_parameters = [];
 	this.voteManager.setOptions(this.commandManager.commandList);
 	this.doNextVote();

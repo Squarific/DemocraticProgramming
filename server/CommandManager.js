@@ -18,6 +18,11 @@ var functions = {
 		fs.readFile(this.filename, {encoding: "utf8"}, function (err, data) {
 			lines = data.split("\n");
 			linenumber = parseFloat(linenumber);
+
+			if (isNaN(linenumber)) {
+				callback("That is not parseable as a number!");
+				return;
+			}
 			
 			if (Math.min(linenumber) !== Math.max(linenumber)) {
 				lines.splice(Math.min(linenumber), 0, code);
