@@ -20,6 +20,8 @@ function Server (io, commandManager, voteManager, settings) {
 }
 
 Server.prototype.bindIO = function bindIO () {
+	console.log("Server started.");
+
 	this.io.on("connection", function (socket) {
 		socket.emit("timebetweenvotes", this.settings.timeBetweenVotes);
 		this.sendVoteOptions(socket);
@@ -72,6 +74,11 @@ Server.prototype.voteupdate = function voteupdate () {
 
 		// Time's up, if we don't have one yet lets see what command won
 		if (!this.current_command) {
+			if (!vote_winner && typeof vote_winner == "boolean") {
+				console.log("No valid vote casted, giving more time.");
+				this.timeTillNextVote += this.settings.timeBetweenVotes;
+				return;
+			}
 			if (!(vote_winner in this.commandManager.commands)) {
 				// That's not a valid command o.0
 				console.log("WARNING: Voted option '" + vote_winner + "' was not a valid command!");
@@ -91,7 +98,6 @@ Server.prototype.voteupdate = function voteupdate () {
 		this.executeCurrentCommand();
 	}	
 	this.voteUpdateTimeout = setTimeout(this.voteupdate.bind(this), 2000);
-	console.log("voteupdate");
 };
 
 Server.prototype.voteOnNewCommand = function voteOnNewCommand () {
@@ -108,7 +114,7 @@ Server.prototype.executeCurrentCommand = function executeCurrentCommand () {
 			this.current_parameters,
 			function (err) {
 				if (err) console.log("WARNING: Couldn't execute command '" + this.current_command + "' with parameters '", this.current_parameters, "' Error: ", err);
-				console.log("Ran command ", this.current_command);
+				console.log("Ran command ", this.current_command, "Parameters", this.current_parameters);
 				// Vote on a new command
 				this.voteOnNewCommand();
 			}.bind(this)
