@@ -137,7 +137,10 @@ Server.prototype.doNextVote = function doNextVote () {
 Server.prototype.getVoteOption = function getVoteOption () {
 	// Return the current options or if no options are set return
 	// The paremeter we are voting on and all the voted options
-	return this.voteManager.options || {
+	if (this.voteManager.options.length !== 0) {
+		return this.voteManager.options;
+	}
+	return {
 		parameter: this.commandManager.getParameter(this.current_command, this.current_parameters.length),
 		currently_voted: this.voteManager.getVoteCounts()
 	};
