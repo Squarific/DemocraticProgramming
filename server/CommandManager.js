@@ -28,7 +28,7 @@ var functions = {
 			if (Math.min(linenumber) !== Math.max(linenumber)) {
 				lines.splice(Math.min(linenumber), 0, code);
 			} else {
-				lines[linenumber - 1] = code;
+				lines[linenumber - 1] = code.substring(0, 500);
 			}
 
 			fs.writeFile(this.filename, lines.join("\n"), {encoding: "utf8"}, callback);

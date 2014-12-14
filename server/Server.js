@@ -20,7 +20,7 @@ function Server (io, commandManager, voteManager, settings) {
 }
 
 Server.prototype.generateName = function () {
-
+	return "user-" + Math.random().toString(36).substr(2, 5);
 };
 
 Server.prototype.bindIO = function bindIO () {
@@ -54,6 +54,11 @@ Server.prototype.bindIO = function bindIO () {
 			}
 		}.bind(this));
 
+		socket.on("chat", function (message) {
+			this.sendChat(socket.name, message.substring(0, 255));
+			console.log("Chat:", this.name, message);
+		}.bind(this));
+
 		socket.on("disconnect", function () {
 			this.playercount -= 1;
 			this.io.emit("playercount", this.playercount);
@@ -81,6 +86,7 @@ Server.prototype.voteupdate = function voteupdate () {
 		if (!this.current_command) {
 			if (!vote_winner && typeof vote_winner == "boolean") {
 				console.log("No valid vote casted, giving more time.");
+				this.sendChat("<System>", "No valid vote casted, giving more time.");
 				this.timeTillNextVote += this.settings.timeBetweenVotes;
 				this.doNextVote();
 				this.voteUpdateTimeout = setTimeout(this.voteupdate.bind(this), 2000);
@@ -95,6 +101,7 @@ Server.prototype.voteupdate = function voteupdate () {
 			}
 
 			this.current_command = vote_winner;
+			this.sendChat("<System>", "Command '" + vote_winner + "' has won!");
 		} else {
 			// We already got a command, lets add it as a parameter
 			this.current_parameters.push(vote_winner);
@@ -122,6 +129,7 @@ Server.prototype.executeCurrentCommand = function executeCurrentCommand () {
 			function (err) {
 				if (err) console.log("WARNING: Couldn't execute command '" + this.current_command + "' with parameters '", this.current_parameters, "' Error: ", err);
 				console.log("Ran command ", this.current_command, "Parameters", this.current_parameters);
+				this.sendChat("<System>", "Executed " + this.current_command + " with parameters '" + this.current_parameters.join(", ") + "'");
 				// Vote on a new command
 				this.voteOnNewCommand();
 			}.bind(this)
@@ -133,8 +141,11 @@ Server.prototype.executeCurrentCommand = function executeCurrentCommand () {
 	}
 };
 
-Server.prototype.sendChat = function sendChat () {
-
+Server.prototype.sendChat = function sendChat (user, message) {
+	this.io.emit("chat", {
+		user: user,
+		message: message
+	});
 };
 
 Server.prototype.doNextVote = function doNextVote () {

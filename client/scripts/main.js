@@ -1,7 +1,10 @@
 function Client () {
 	this.statusElement = document.getElementById("connectionstatus");;
 	this.usercountElement = document.getElementById("usercount");
-	this.consoleElement = document.getElementById("console");
+	this.chat = new Chat(document.getElementById("chat"), function (message) {
+		this.socket.emit("chat", message);
+	}.bind(this));
+
 	this.socket = io('http://127.0.0.1:80');
 	//this.socket = io('http://democraticprograming.squarific.com:80');
 
@@ -25,12 +28,17 @@ function Client () {
 		while (votefield.lastChild) {
 			votefield.removeChild(votefield.lastChild);
 		}
+
 		this.poll = new Poll(timebetween, votefield, function (option) {
 			this.socket.emit("vote", option, function (data) {
 				this.poll.statusTextDom.innerHTML = "<h2>You have voted for: " + data + "</h2>";
 				console.log("Vote response: ", data);
 			}.bind(this));
 		}.bind(this));
+	}.bind(this));
+
+	this.socket.on("chat", function (data) {
+		this.chat.addMessage(data.user, data.message);
 	}.bind(this));
 
 	this.socket.on("playercount", function (users) {

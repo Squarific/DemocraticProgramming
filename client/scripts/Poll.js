@@ -15,10 +15,17 @@ function Poll (timebetween, container, votecallback) {
 	this.inputContainerDom = this.container.appendChild(document.createElement("div"));
 	this.inputContainerDom.classList.add("inputcontainer-poll");
 	this.inputContainerDom.style.display = "none";
+
 	this.input = this.inputContainerDom.appendChild(document.createElement("input"));
 	this.input.placeholder = "Type here...";
+	this.input.addEventListener("keypress", function (event) {
+		if (event.keyCode == 13) {
+			this.voteinput();
+		}
+	}.bind(this));
+
 	button = this.inputContainerDom.appendChild(document.createElement("div"));
-	button.classList.add("button-poll-vote");
+	button.classList.add("button-small");
 	button.classList.add("voteoption");
 	button.appendChild(document.createTextNode("Vote!"));
 	button.addEventListener("click", this.voteinput.bind(this));
