@@ -1,9 +1,9 @@
 var fs = require("fs");
 
 var params = {
-	commitmessage: "This is the message displayed on github and in the git history",
-	linenumber: "The linenumber is the number of the line in the source file, this can be an integer (1, 2, 3, 4) or a float (1.4, 3.5, 6.9) in case it is a float then a new line will be created between min(number) and max(number)",
-	code: "This is a string containing python code"
+	commitmessage: "Commit message",
+	linenumber: "Linenumber",
+	code: "Line of code"
 };
 
 var functions = {
@@ -11,13 +11,14 @@ var functions = {
 		this.repo.add("*", function () {
 			this.repo.commit(message, function () {
 				this.repo.push("origin", "master", callback);
-			})
-		})
+			}.bind(this))
+		}.bind(this))
 	},
 	changeline: function changeline (linenumber, code, callback) {
 		fs.readFile(this.filename, {encoding: "utf8"}, function (err, data) {
 			lines = data.split("\n");
 			linenumber = parseFloat(linenumber);
+			linenumber = Math.max(5000, linenumber);
 
 			if (isNaN(linenumber)) {
 				callback("That is not parseable as a number!");
@@ -43,9 +44,9 @@ var functions = {
 				return;
 			}
 
-			lines.splice(linenumber, 1);
+			lines.splice(linenumber - 1, 1);
 			fs.writeFile(this.filename, lines.join("\n"), callback);
-		});
+		}.bind(this));
 	}
 };
 

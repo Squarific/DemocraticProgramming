@@ -19,10 +19,15 @@ function Server (io, commandManager, voteManager, settings) {
 	this.voteUpdateTimeout = setTimeout(this.voteupdate.bind(this), 2000);
 }
 
+Server.prototype.generateName = function () {
+
+};
+
 Server.prototype.bindIO = function bindIO () {
 	console.log("Server started.");
 
 	this.io.on("connection", function (socket) {
+		socket.name = this.generateName();
 		socket.emit("timebetweenvotes", this.settings.timeBetweenVotes);
 		this.sendVoteOptions(socket);
 		this.playercount += 1;
@@ -126,6 +131,10 @@ Server.prototype.executeCurrentCommand = function executeCurrentCommand () {
 		this.voteManager.setOptions([]);
 		this.doNextVote();
 	}
+};
+
+Server.prototype.sendChat = function sendChat () {
+
 };
 
 Server.prototype.doNextVote = function doNextVote () {

@@ -23,13 +23,16 @@
 		<div id="help" class="field">
 			<h1>Programming togheter</h1>
 			<h2>What is Democratic Programming?</h2>
-			This webapp lets visitors vote on what to do with the code.
+			This webapp lets visitors vote on what to do with the code. <br/><br/>
+			The winning option is chosen by chance, every vote makes it more likely the option will win.<br/><br/>
+			Example: if A has 500 votes and B has 300 votes then A will on average win 500 out of 800 times.
 			<h2>Possible commands</h2>
 			<h3>changeline</h3>
 			This command changes or creates a line of code.<br/>
-			The first argument will be the code inserted at the given line. <br/>
+			The first argument will be the code inserted at the given line (max length: 500 chars). <br/>
 			The second argument is the line number, if it is an integer the specified line will be changed.<br/>
-			If it is a float then a new line will be inserted between min(line number) and max(line number)
+			If it is a float then a new line will be inserted between min(line number) and max(line number)<br/>
+			Max linenumber: 5000, if higher defaults back to 5000
 			<h3>deleteline</h3>
 			This command deletes a line of code <br/>
 			The first argument is the line number at which to delete a line.
@@ -38,7 +41,8 @@
 			The first argument is the commit message.
 
 		</div>
-		<div id="code" class="field"></div>
+		<div style="clear:both;"></div>
+		<div id="code" class="field fullscreenfield"></div>
 		<div style="clear:both"></div>
 		<script src="scripts/socket.io.js"></script>
 		<script src="scripts/Poll.js"></script>

@@ -5,15 +5,18 @@ function Poll (timebetween, container, votecallback) {
 	this.votecallback = votecallback;
 
 	this.statusTextDom = this.container.appendChild(document.createElement("span"));
+	this.votingForTextDom = this.container.appendChild(document.createElement("span"));
 	this.pollTimeDom = this.createPollTimeDom(container);
 	votetext = this.container.appendChild(document.createElement("span"));
 	votetext.innerHTML = "<h2>Vote for one of the following options:</h2>";
 	this.voteOptionsDom = container.appendChild(document.createElement("div"));
 
+
 	this.inputContainerDom = this.container.appendChild(document.createElement("div"));
 	this.inputContainerDom.classList.add("inputcontainer-poll");
 	this.inputContainerDom.style.display = "none";
 	this.input = this.inputContainerDom.appendChild(document.createElement("input"));
+	this.input.placeholder = "Type here...";
 	button = this.inputContainerDom.appendChild(document.createElement("div"));
 	button.classList.add("button-poll-vote");
 	button.classList.add("voteoption");
@@ -62,9 +65,23 @@ Poll.prototype.setVoteOptionsFromList = function setVoteOptionsFromList (options
 	for (var k = 0; k < options.length; k++) {
 		this.addVoteOption(this.voteOptionsDom, options[k]);
 	}
+
+	this.votingForTextDom.innerHTML = "<h2>Currently voting on a command to run.</h2>";
+	this.inputContainerDom.style.display = "none";
 };
 
+Poll.prototype.setVoteOptionsFromVotes = function setVoteOptionsFromVotes (options) {
+	while (this.voteOptionsDom.firstChild) {
+		this.voteOptionsDom.removeChild(this.voteOptionsDom.firstChild);
+	}
 
+	for (var k in options.currently_voted) {
+		this.addVoteOption(this.voteOptionsDom, k);
+	}
+
+	this.votingForTextDom.innerHTML = "<h2>Currently voting on: " + options.parameter + "</h2>";
+	this.inputContainerDom.style.display = "";
+};
 
 Poll.prototype.setVoteData = function setVoteData (data) {
 	this.timeTillNextVote = Date.now() + data.timeTillNextVote;
@@ -74,4 +91,6 @@ Poll.prototype.setVoteData = function setVoteData (data) {
 	} else {
 		this.setVoteOptionsFromVotes(data.options);
 	}
+	this.statusTextDom.innerHTML = "";
+	this.input.value = "";
 };

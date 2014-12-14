@@ -55,8 +55,15 @@ body {
 	min-width:300px;
 	margin-left:50px;
 	margin-top:25px;
+	margin-bottom:25px;
 	max-height:650px;
 	overflow:auto;
+}
+
+.fullscreenfield {
+	float:none;
+	margin-right:50px;
+	width:initial;
 }
 
 .righttitle {
@@ -133,6 +140,7 @@ body {
 
 	.field {
 		margin-left:0;
+		margin-right:0;
 		min-width:0;
 		width:auto;
 		float:none;
