@@ -12,6 +12,7 @@ function Poll (timebetween, container, votecallback) {
 
 	this.inputContainerDom = this.container.appendChild(document.createElement("div"));
 	this.inputContainerDom.classList.add("inputcontainer-poll");
+	this.inputContainerDom.style.display = "none";
 	this.input = this.inputContainerDom.appendChild(document.createElement("input"));
 	button = this.inputContainerDom.appendChild(document.createElement("div"));
 	button.classList.add("button-poll-vote");
@@ -62,6 +63,8 @@ Poll.prototype.setVoteOptionsFromList = function setVoteOptionsFromList (options
 		this.addVoteOption(this.voteOptionsDom, options[k]);
 	}
 };
+
+
 
 Poll.prototype.setVoteData = function setVoteData (data) {
 	this.timeTillNextVote = Date.now() + data.timeTillNextVote;
