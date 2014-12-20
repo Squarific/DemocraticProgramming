@@ -44,18 +44,35 @@ Server.prototype.bindIO = function bindIO () {
 			// Try to vote this option, if succeeds tell the other clients
 			// And inform the client of success
 			if (this.voteManager.vote(socket.id, option)) {
-				this.io.emit("vote", option);
-				callback(option);
-			} else if (this.voteManager.changeVote(socket.id, option)) {
+				// Lower the wait when a vote is received but only
+				// if that doesn't go below the minimum wait
+				if (this.timeTillNextVote - Date.now() > this.settings.lowerVoteTimeAbove) {
+					this.timeTillNextVote -= this.settings.lowerVoteTimeWith;
+				}
+
+				this.io.emit("vote", {
+					option: option,
+					votes: this.voteManager.getVoteCount(option),
+					timeleft: this.timeTillNextVote - Date.now()
+				});
 				callback(option);
 			} else {
-				callback("ILLEGAL");
-			}
-
-			// Lower the wait when a vote is received but only
-			// if that doesn't go below the minimum wait
-			if (this.timeTillNextVote > this.settings.lowerVoteTimeAbove) {
-				this.timeTillNextVote -= this.settings.lowerVoteTimeWith;
+				previous = this.voteManager.changeVote(socket.id, option);
+				if (previous) {
+					// Let the client know it needs to update the vote count of 2 votes
+					this.io.emit("votes", [{
+						option: previous,
+						votes: this.voteManager.getVoteCount(previous),
+						timeleft: this.timeTillNextVote - Date.now()
+					},{
+						option: option,
+						votes: this.voteManager.getVoteCount(option),
+						timeleft: this.timeTillNextVote - Date.now()
+					}]);
+					callback(option);
+				} else {
+					callback("ILLEGAL");
+				}
 			}
 		}.bind(this));
 
@@ -175,7 +192,10 @@ Server.prototype.getVoteOption = function getVoteOption () {
 	// Return the current options or if no options are set return
 	// The paremeter we are voting on and all the voted options
 	if (this.voteManager.options.length !== 0) {
-		return this.voteManager.options;
+		return {
+			options: this.voteManager.options,
+			currently_voted: this.voteManager.getVoteCounts()
+		};
 	}
 	return {
 		parameter: this.commandManager.getParameter(this.current_command, this.current_parameters.length),

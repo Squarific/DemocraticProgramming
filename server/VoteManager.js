@@ -25,8 +25,9 @@ VoteManager.prototype.changeVote = function changeVote (id, option) {
 
 	for (var voteKey = 0; voteKey < this.votes.length; voteKey++) {
 		if (this.votes[voteKey].id == id) {
+			previous = this.votes[voteKey].option;
 			this.votes[voteKey].option = option;
-			return true;
+			return previous;
 		}
 	}
 
@@ -54,6 +55,16 @@ VoteManager.prototype.isValidOption = function isValidOption (option) {
 	}
 
 	return false;
+};
+
+VoteManager.prototype.getVoteCount = function getVoteCount (option) {
+	var count = 0;
+	
+	for (var voteKey = 0; voteKey < this.votes.length; voteKey++) {
+		if (this.votes[voteKey].option == option) count++;
+	}
+
+	return count;
 };
 
 VoteManager.prototype.getVoteCounts = function getVoteCounts () {

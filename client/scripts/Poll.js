@@ -58,10 +58,32 @@ Poll.prototype.vote = function vote (option) {
 	this.votecallback(option);
 };
 
-Poll.prototype.addVoteOption = function addVoteOption (container, option) {
+Poll.prototype.voted = function voted (option, votes, timeleft) {
+	this.timeTillNextVote = Date.now() + timeleft;
+
+	for (var k = 0; k < this.voteOptionsDom.children.length; k++) {
+		var optionDom = this.voteOptionsDom.children[k];
+		if (optionDom.voteOption == option) {
+			if (votes == 0) {
+				this.voteOptionsDom.removeChild(optionDom);
+				return
+			}
+			while(optionDom.firstChild) {
+				optionDom.removeChild(optionDom.firstChild);
+			}
+			optionDom.appendChild(document.createTextNode(option + " (" + votes + ")"));
+			return;
+		}
+	}
+
+	this.addVoteOption(this.voteOptionsDom, option, votes);
+};
+
+Poll.prototype.addVoteOption = function addVoteOption (container, option, votes) {
 	var optionDom = container.appendChild(document.createElement("div"));
 	optionDom.classList.add("voteoption");
-	optionDom.innerHTML = option;
+	optionDom.appendChild(document.createTextNode(option + " (" + votes + ")"));
+	optionDom.voteOption = option;
 	optionDom.addEventListener("click", this.vote.bind(this, option));
 };
 
@@ -70,8 +92,8 @@ Poll.prototype.setVoteOptionsFromList = function setVoteOptionsFromList (options
 		this.voteOptionsDom.removeChild(this.voteOptionsDom.firstChild);
 	}
 
-	for (var k = 0; k < options.length; k++) {
-		this.addVoteOption(this.voteOptionsDom, options[k]);
+	for (var k = 0; k < options.options.length; k++) {
+		this.addVoteOption(this.voteOptionsDom, options.options[k], options.currently_voted[options.options[k]] || 0);
 	}
 
 	this.votingForTextDom.innerHTML = "<h2>Currently voting on a command to run.</h2>";
@@ -84,7 +106,7 @@ Poll.prototype.setVoteOptionsFromVotes = function setVoteOptionsFromVotes (optio
 	}
 
 	for (var k in options.currently_voted) {
-		this.addVoteOption(this.voteOptionsDom, k);
+		this.addVoteOption(this.voteOptionsDom, k, options.currently_voted[k]);
 	}
 
 	this.votingForTextDom.innerHTML = "<h2>Currently voting on: " + options.parameter + "</h2>";
@@ -94,7 +116,7 @@ Poll.prototype.setVoteOptionsFromVotes = function setVoteOptionsFromVotes (optio
 Poll.prototype.setVoteData = function setVoteData (data) {
 	this.timeTillNextVote = Date.now() + data.timeTillNextVote;
 	console.log(data);
-	if (typeof data.options.length == "number") {
+	if (data.options && data.options.options) {
 		this.setVoteOptionsFromList(data.options);
 	} else {
 		this.setVoteOptionsFromVotes(data.options);

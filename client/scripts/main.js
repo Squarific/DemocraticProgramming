@@ -77,6 +77,16 @@ function Client () {
 		this.usercountElement.innerText = users;
 	}.bind(this));
 
+	this.socket.on("vote", function (data) {
+		this.poll.voted(data.option, data.votes, data.timeleft);
+	}.bind(this));
+
+	this.socket.on("votes", function (data) {
+		for (var k = 0; k < data.length; k++) {
+			this.poll.voted(data[k].option, data[k].votes, data[k].timeleft);
+		}
+	}.bind(this));
+
 	this.socket.on("voteoptions", function (data) {
 		this.poll.setVoteData(data);
 		console.log("Voteoptions data: ", data);
