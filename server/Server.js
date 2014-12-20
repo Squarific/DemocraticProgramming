@@ -1,3 +1,4 @@
+var fs = require("fs");
 function emptyfunction () {}
 
 function Server (io, commandManager, voteManager, settings) {
@@ -32,6 +33,10 @@ Server.prototype.bindIO = function bindIO () {
 		this.sendVoteOptions(socket);
 		this.playercount += 1;
 		this.io.emit("playercount", this.playercount);
+		
+		this.getSourceFile(function (data) {
+			socket.emit("sourcefile", data);
+		})
 
 		socket.on("vote", function (option, callback) {
 			callback = callback || emptyfunction;
@@ -105,6 +110,7 @@ Server.prototype.voteupdate = function voteupdate () {
 		} else {
 			// We already got a command, lets add it as a parameter
 			this.current_parameters.push(vote_winner);
+			this.sendChat("<System>", "Parameter '" + vote_winner + "' has won!");
 		}
 
 		// Ok so we got a command now, lets execute it
@@ -126,10 +132,11 @@ Server.prototype.executeCurrentCommand = function executeCurrentCommand () {
 		this.commandManager.runCommand(
 			this.current_command,
 			this.current_parameters,
-			function (err) {
+			function (err, data) {
 				if (err) console.log("WARNING: Couldn't execute command '" + this.current_command + "' with parameters '", this.current_parameters, "' Error: ", err);
 				console.log("Ran command ", this.current_command, "Parameters", this.current_parameters);
 				this.sendChat("<System>", "Executed " + this.current_command + " with parameters '" + this.current_parameters.join(", ") + "'");
+				this.io.emit("commanddata", data);
 				// Vote on a new command
 				this.voteOnNewCommand();
 			}.bind(this)
@@ -152,6 +159,16 @@ Server.prototype.doNextVote = function doNextVote () {
 	// Prepare for the next vote
 	this.timeTillNextVote = Date.now() + this.settings.timeBetweenVotes;
 	this.sendVoteOptions();
+};
+
+Server.prototype.getSourceFile = function getSourceFile (callback) {
+	fs.readFile(this.commandManager.filename, {encoding: "utf8"}, function (err, data) {
+		if (err) {
+			console.log(err);
+			return "Error retrieving source file";
+		}
+		callback(data);
+	})
 };
 
 Server.prototype.getVoteOption = function getVoteOption () {

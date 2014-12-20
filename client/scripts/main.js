@@ -37,6 +37,38 @@ function Client () {
 		}.bind(this));
 	}.bind(this));
 
+	this.socket.on("commanddata", function (data) {
+		if (!data) return;
+		//data = {
+		//    type: 0 = changeline, 1 = deleteline,
+		//    linenumber: number,
+		//    source: string
+		//}
+		sourceDom = document.getElementById("sourcefile");
+		lines = sourceDom.current_source.split("\n");
+
+		if (data.type == 0) {
+			if (Math.min(data.linenumber) !== Math.max(data.linenumber)) {
+				lines.splice(Math.min(data.linenumber), 0, data.source);
+			} else {
+				lines[data.linenumber - 1] = data.source.substring(0, 250);
+			}
+		} else if (data.type == 1) {
+			lines.splice(data.linenumber - 1, 1);
+		}
+
+		sourceDom.current_source = lines.join("\n");
+		sourceDom[('innerText' in sourceDom)? 'innerText' : 'textContent'] = sourceDom.current_source;
+		Prism.highlightElement(sourceDom);
+	});
+
+	this.socket.on("sourcefile", function (data) {
+		sourceDom = document.getElementById("sourcefile");
+		sourceDom[('innerText' in sourceDom)? 'innerText' : 'textContent'] = data;
+		sourceDom.current_source = data;
+		Prism.highlightElement(sourceDom);
+	});
+
 	this.socket.on("chat", function (data) {
 		this.chat.addMessage(data.user, data.message);
 	}.bind(this));
@@ -49,6 +81,8 @@ function Client () {
 		this.poll.setVoteData(data);
 		console.log("Voteoptions data: ", data);
 	}.bind(this));
+
+	this.socket.emit("asksourcefile");
 }
 
 client = new Client();

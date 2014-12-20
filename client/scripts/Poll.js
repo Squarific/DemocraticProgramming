@@ -51,6 +51,7 @@ Poll.prototype.createPollTimeDom = function createPollTimeDom (container) {
 
 Poll.prototype.voteinput = function () {
 	this.vote(this.input.value);
+	this.input.value = "";
 };
 
 Poll.prototype.vote = function vote (option) {

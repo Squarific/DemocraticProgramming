@@ -18,7 +18,8 @@ var functions = {
 		fs.readFile(this.filename, {encoding: "utf8"}, function (err, data) {
 			lines = data.split("\n");
 			linenumber = parseFloat(linenumber);
-			linenumber = Math.max(5000, linenumber);
+			linenumber = Math.min(1000, linenumber);
+			code = code + "" //Ensure code is a string
 
 			if (isNaN(linenumber)) {
 				callback("That is not parseable as a number!");
@@ -28,10 +29,16 @@ var functions = {
 			if (Math.min(linenumber) !== Math.max(linenumber)) {
 				lines.splice(Math.min(linenumber), 0, code);
 			} else {
-				lines[linenumber - 1] = code.substring(0, 500);
+				lines[linenumber - 1] = code.substring(0, 250);
 			}
 
-			fs.writeFile(this.filename, lines.join("\n"), {encoding: "utf8"}, callback);
+			fs.writeFile(this.filename, lines.join("\n"), {encoding: "utf8"}, function (err) {
+				callback(err, {
+					type: 0,
+					linenumber: linenumber,
+					source: code.substring(0, 250)
+				});
+			});
 		}.bind(this));
 	},
 	deleteline: function deleteline (linenumber, callback) {
@@ -45,7 +52,12 @@ var functions = {
 			}
 
 			lines.splice(linenumber - 1, 1);
-			fs.writeFile(this.filename, lines.join("\n"), callback);
+			fs.writeFile(this.filename, lines.join("\n"), function (err) {
+				callback(err, {
+					type: 1,
+					linenumber: linenumber
+				});
+			});
 		}.bind(this));
 	}
 };

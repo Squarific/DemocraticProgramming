@@ -70,12 +70,6 @@ body {
 	overflow:auto;
 }
 
-.fullscreenfield {
-	float:none;
-	margin-right:50px;
-	width:initial;
-}
-
 .righttitle {
 	transition-duration:0.1s;
 }
@@ -126,6 +120,17 @@ body {
 #connectionstatus, #usercount {
 	transition-duration:0;
 }
+
+#sourcefile {
+	font-family: 'Fira Mono', "Lucida Console", Monaco, "Courier New", Courier, monospace;
+	overflow:visible;
+	text-shadow:none;
+}
+
+#sourcecode {
+	background:rgba(152, 141, 84, 0.1);
+}
+
 
 @media (max-width: 600px) {
 	.title {

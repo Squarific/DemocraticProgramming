@@ -31,7 +31,7 @@ Chat.prototype.addMessage = function addMessage (user, message) {
 		
 		messageDom = this.messagesDom.appendChild(document.createElement("div"));
 		messageDom.classList.add("chat-message");
-		messageDom.innerText = user + ": " + message;
+		messageDom.appendChild(document.createTextNode(user + ": " + message));
 
 		if (max_scroll <= old_scroll) {
 			this.messagesDom.scrollTop = this.messagesDom.scrollHeight - this.messagesDom.getBoundingClientRect().height;

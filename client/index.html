@@ -3,9 +3,11 @@
 	<head>
 		<title>Democratic Programming</title>
 		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="prism.css">
 		<link href='http://fonts.googleapis.com/css?family=Orbitron:700' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Arapey' rel='stylesheet' type='text/css'>
-		<link rel="shortcut icon" href="favicon.ico?t=220408112013"> 
+		<link href='http://fonts.googleapis.com/css?family=Fira+Mono' rel='stylesheet' type='text/css'>
+		<link rel="shortcut icon" href="images/favicon.ico?v=5"> 
 		<meta name="viewport" content="width=device-width">
 		<meta name="description" content="Program something by voting in a democratic way.">
 	</head>
@@ -29,10 +31,10 @@
 			<h2>Possible commands</h2>
 			<h3>changeline</h3>
 			This command changes or creates a line of code.<br/>
-			The first argument will be the code inserted at the given line (max length: 500 chars). <br/>
+			The first argument will be the code inserted at the given line (max length: 250 chars). <br/>
 			The second argument is the line number, if it is an integer the specified line will be changed.<br/>
 			If it is a float then a new line will be inserted between min(line number) and max(line number)<br/>
-			Max linenumber: 5000, if higher defaults back to 5000
+			Max linenumber: 1000, if higher defaults back to 1000
 			<h3>deleteline</h3>
 			This command deletes a line of code <br/>
 			The first argument is the line number at which to delete a line.
@@ -42,8 +44,9 @@
 
 		</div>
 		<div style="clear:both;"></div>
-		<div id="code" class="field fullscreenfield"></div>
+		<pre id="sourcecode" class="line-numbers"><code id="sourcefile" class="language-python"></code></pre>
 		<div style="clear:both"></div>
+		<script src="scripts/Prism.js"></script>
 		<script src="scripts/socket.io.js"></script>
 		<script src="scripts/Poll.js"></script>
 		<script src="scripts/Chat.js"></script>
