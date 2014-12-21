@@ -33,17 +33,18 @@ Server.prototype.bindIO = function bindIO () {
 		this.sendVoteOptions(socket);
 		this.playercount += 1;
 		this.io.emit("playercount", this.playercount);
+		socket.vote_id = socket.request.connection.remoteAddress;
 		
 		this.getSourceFile(function (data) {
 			socket.emit("sourcefile", data);
-		})
+		});
 
 		socket.on("vote", function (option, callback) {
 			callback = callback || emptyfunction;
 
 			// Try to vote this option, if succeeds tell the other clients
 			// And inform the client of success
-			if (this.voteManager.vote(socket.id, option)) {
+			if (this.voteManager.vote(socket.vote_id, option)) {
 				// Lower the wait when a vote is received but only
 				// if that doesn't go below the minimum wait
 				if (this.timeTillNextVote - Date.now() > this.settings.lowerVoteTimeAbove) {
@@ -57,7 +58,7 @@ Server.prototype.bindIO = function bindIO () {
 				});
 				callback(option);
 			} else {
-				previous = this.voteManager.changeVote(socket.id, option);
+				previous = this.voteManager.changeVote(socket.vote_id, option);
 				if (previous) {
 					// Let the client know it needs to update the vote count of 2 votes
 					this.io.emit("votes", [{

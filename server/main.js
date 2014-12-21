@@ -6,7 +6,7 @@ var Git = require("./gittens/main.js");
 
 Git.open("./data", function (err, repo) {
 	if (err) throw err;
-	startServer(80, "./data/code.py", repo);
+	startServer(8080, "./data/code.py", repo);
 });
 
 function startServer (port, file, repo) {
