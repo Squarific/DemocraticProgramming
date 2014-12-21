@@ -8,6 +8,7 @@ var params = {
 
 var functions = {
 	commit: function commit (message, callback) {
+		message = message + "";
 		this.repo.add("*", function () {
 			this.repo.commit(message, function () {
 				this.repo.push("origin", "master", callback);
