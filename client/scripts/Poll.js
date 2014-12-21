@@ -64,7 +64,7 @@ Poll.prototype.voted = function voted (option, votes, timeleft) {
 	for (var k = 0; k < this.voteOptionsDom.children.length; k++) {
 		var optionDom = this.voteOptionsDom.children[k];
 		if (optionDom.voteOption == option) {
-			if (votes == 0) {
+			if (votes == 0 && !this.setFromList) {
 				this.voteOptionsDom.removeChild(optionDom);
 				return
 			}
@@ -98,6 +98,7 @@ Poll.prototype.setVoteOptionsFromList = function setVoteOptionsFromList (options
 
 	this.votingForTextDom.innerHTML = "<h2>Currently voting on a command to run.</h2>";
 	this.inputContainerDom.style.display = "none";
+	this.setFromList = true;
 };
 
 Poll.prototype.setVoteOptionsFromVotes = function setVoteOptionsFromVotes (options) {
@@ -111,6 +112,7 @@ Poll.prototype.setVoteOptionsFromVotes = function setVoteOptionsFromVotes (optio
 
 	this.votingForTextDom.innerHTML = "<h2>Currently voting on: " + options.parameter + "</h2>";
 	this.inputContainerDom.style.display = "";
+	this.setFromList = false;
 };
 
 Poll.prototype.setVoteData = function setVoteData (data) {

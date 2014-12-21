@@ -49,7 +49,7 @@ body {
 }
 
 .messagecontainer {
-	max-height:580px;
+	max-height:520px;
 	height:580px;
 	overflow:auto;
 }

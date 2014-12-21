@@ -5,8 +5,8 @@ function Client () {
 		this.socket.emit("chat", message);
 	}.bind(this));
 
-	this.socket = io('http://127.0.0.1:80');
-	//this.socket = io('http://democraticprograming.squarific.com:80');
+	//this.socket = io('http://democraticprogramming.squarific.com:8080');
+	this.socket = io('http://127.0.0.1:8080');
 
 	this.socket.on("connect", function () {
 		this.statusElement.innerText = "Connected.";
