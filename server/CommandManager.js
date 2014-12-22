@@ -28,8 +28,8 @@ var functions = {
 				return;
 			}
 			
-			if (Math.min(linenumber) !== Math.max(linenumber)) {
-				lines.splice(Math.min(linenumber), 0, code);
+			if (Math.floor(linenumber) !== Math.ceil(linenumber)) {
+				lines.splice(Math.floor(linenumber), 0, code.substring(0, 250));
 			} else {
 				lines[linenumber - 1] = code.substring(0, 250);
 			}

@@ -96,8 +96,8 @@ function Client () {
 Client.prototype.changeline = function changeline (data) {
 	sourceDom = document.getElementById("sourcefile");
 	lines = sourceDom.current_source.split("\n");
-	if (Math.min(data.linenumber) !== Math.max(data.linenumber)) {
-		lines.splice(Math.min(data.linenumber), 0, data.source);
+	if (Math.floor(data.linenumber) !== Math.ceil(data.linenumber)) {
+		lines.splice(Math.floor(data.linenumber), 0, data.source);
 	} else {
 		lines[data.linenumber - 1] = data.source.substring(0, 250);
 	}

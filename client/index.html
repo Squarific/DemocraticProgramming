@@ -18,6 +18,7 @@
 			<span class="righttitle">
 				<span class="smalltitle">Status: <span id="connectionstatus">Not connected.</span></span>
 				<span class="smalltitle usercount">There are <span id="usercount">x</span> user(s)</span>
+				<span class="gearicon" onclick="client.toggleMenu()">⚙</span>
 			</span>
 			<div style="clear:both;"></div>
 		</div>
@@ -38,7 +39,7 @@
 			This command changes or creates a line of code.<br/>
 			The first argument will be the code inserted at the given line (max length: 250 chars). <br/>
 			The second argument is the line number, if it is an integer the specified line will be changed.<br/>
-			If it is a float then a new line will be inserted between min(line number) and max(line number)<br/>
+			If it is a float then a new line will be inserted between floor(line number) and ceil(line number)<br/>
 			Max linenumber: 1000, if higher defaults back to 1000
 			<h3>deleteline</h3>
 			This command deletes a line of code <br/>
@@ -88,9 +89,9 @@
 		</div>
 		<script src="scripts/Prism.js?v=1"></script>
 		<script src="scripts/socket.io.js"></script>
-		<script src="scripts/Poll.js?v=4"></script>
+		<script src="scripts/Poll.js?v=6"></script>
 		<script src="scripts/Chat.js?v=4"></script>
-		<script src="scripts/main.js?v=4"></script>
+		<script src="scripts/main.js?v=5"></script>
 		<!-- Go to www.addthis.com/dashboard to customize your tools -->
 		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-53c4fbf2311fe8f1"></script>
 	</body>

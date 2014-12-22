@@ -24,6 +24,17 @@ function Poll (timebetween, container, votecallback) {
 		}
 	}.bind(this));
 
+	this.input.addEventListener("keydown", function (event) {
+		if (event.keyCode == 9) {
+			var position = typeof this.input.selectionStart == "number" ? this.input.selectionStart : this.input.value.length;
+			this.input.value = this.input.value.slice(0, position) + "    " + this.input.value.slice(position, this.input.value.length);
+			if (typeof this.input.setSelectionRange == "function") {
+				this.input.setSelectionRange(position + 4, position + 4);
+			}
+			event.preventDefault();
+		}
+	}.bind(this));
+
 	button = this.inputContainerDom.appendChild(document.createElement("div"));
 	button.classList.add("button-small");
 	button.classList.add("voteoption");
@@ -80,7 +91,7 @@ Poll.prototype.voted = function voted (option, votes, timeleft) {
 };
 
 Poll.prototype.addVoteOption = function addVoteOption (container, option, votes) {
-	var optionDom = container.appendChild(document.createElement("div"));
+	var optionDom = container.appendChild(document.createElement("pre"));
 	optionDom.classList.add("voteoption");
 	optionDom.appendChild(document.createTextNode(option + " (" + votes + ")"));
 	optionDom.voteOption = option;

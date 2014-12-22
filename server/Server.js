@@ -37,7 +37,7 @@ Server.prototype.bindIO = function bindIO () {
 		if (this.current_command) {
 			socket.emit("chat", {
 				user: "<System>",
-				message: "Current command: " + this.current_command
+				message: "Current command: '" + this.current_command + "'' current parameters: '" + this.current_parameters.join(", ") + "'"
 			});
 		}
 		
