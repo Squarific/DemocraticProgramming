@@ -117,7 +117,6 @@ Poll.prototype.setVoteOptionsFromVotes = function setVoteOptionsFromVotes (optio
 
 Poll.prototype.setVoteData = function setVoteData (data) {
 	this.timeTillNextVote = Date.now() + data.timeTillNextVote;
-	console.log(data);
 	if (data.options && data.options.options) {
 		this.setVoteOptionsFromList(data.options);
 	} else {

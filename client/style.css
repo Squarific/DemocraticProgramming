@@ -117,6 +117,11 @@ body {
 	padding:4px;
 }
 
+.stronger {
+	font-size:120%;
+	font-weight:800;
+}
+
 #connectionstatus, #usercount {
 	transition-duration:0;
 }
@@ -129,8 +134,17 @@ body {
 
 #sourcecode {
 	background:rgba(152, 141, 84, 0.1);
+	margin-bottom:100px;
 }
 
+#goal {
+	margin:20px;
+	margin-left:50px;
+	margin-right:50px;
+	background:rgba(152, 141, 84, 0.25);
+	border-left:solid 5px rgba(109, 88, 48, 0.5);
+	padding:20px;
+}
 
 @media (max-width: 600px) {
 	.title {

@@ -3,12 +3,13 @@ var fs = require("fs");
 var params = {
 	commitmessage: "Commit message",
 	linenumber: "Linenumber",
-	code: "Line of code"
+	code: "Line of code",
+	goal: "Goal message"
 };
 
 var functions = {
 	commit: function commit (message, callback) {
-		message = message + "";
+		message = message + ""; //Ensure string
 		this.repo.add("*", function () {
 			this.repo.commit(message, function () {
 				this.repo.push("origin", "master", callback);
@@ -60,10 +61,20 @@ var functions = {
 				});
 			});
 		}.bind(this));
+	},
+	setgoal: function setgoal (message, callback) {
+		message = message || "There is no goal yet, try voting for one!";
+		message = message + "" //Ensure string
+		this.server.current_goal = message.substring(0, 255);
+		callback(undefined, {
+			type: 2,
+			goal: message.substring(0, 255)
+		});
 	}
 };
 
 function CommandManager (filename, repo) {
+	this.server = {};
 	this.filename = filename;
 	this.repo = repo;
 }
@@ -104,6 +115,10 @@ CommandManager.prototype.commands = {
 	deleteline: {
 		parameters: [params.linenumber],
 		exec: functions.deleteline
+	},
+	setgoal: {
+		parameters: [params.goal],
+		exec: functions.setgoal
 	}
 };
 

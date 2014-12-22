@@ -14,9 +14,9 @@ function startServer (port, file, repo) {
 		IoServer(port),
 		new CommandManager(file, repo),
 		new VoteManager(), {
-			lowerVoteTimeAbove: 2 * 60 * 1000,
+			lowerVoteTimeAbove: 1 * 60 * 1000,
 			lowerVoteTimeWith: 2 * 1000,
-			timeBetweenVotes:  5 * 60 * 1000
+			timeBetweenVotes:  3 * 60 * 1000
 		}
 	);
 }

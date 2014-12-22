@@ -5,11 +5,13 @@ function Server (io, commandManager, voteManager, settings) {
 	this.io = io;
 	this.settings = settings;
 	this.commandManager = commandManager;
+	this.commandManager.server = this;
 	this.voteManager = voteManager;
 
 	this.playercount = 0;
 	this.current_command = "";
 	this.current_parameters = [];
+	this.current_goal = "There is no goal yet, try voting for one!";
 
 	// Bind socket events
 	this.bindIO();
@@ -30,10 +32,20 @@ Server.prototype.bindIO = function bindIO () {
 	this.io.on("connection", function (socket) {
 		socket.name = this.generateName();
 		socket.emit("timebetweenvotes", this.settings.timeBetweenVotes);
+		socket.emit("goal", this.current_goal);
+
+		if (this.current_command) {
+			socket.emit("chat", {
+				user: "<System>",
+				message: "Current command: " + this.current_command
+			});
+		}
+		
 		this.sendVoteOptions(socket);
 		this.playercount += 1;
 		this.io.emit("playercount", this.playercount);
 		socket.vote_id = socket.request.connection.remoteAddress;
+		console.log(socket.vote_id, "connected.");
 		
 		this.getSourceFile(function (data) {
 			socket.emit("sourcefile", data);

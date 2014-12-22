@@ -5,8 +5,8 @@ function Client () {
 		this.socket.emit("chat", message);
 	}.bind(this));
 
-	//this.socket = io('http://democraticprogramming.squarific.com:8080');
-	this.socket = io('http://127.0.0.1:8080');
+	this.socket = io('http://democraticprogramming.squarific.com:8080');
+	//this.socket = io('http://127.0.0.1:8080');
 
 	this.socket.on("connect", function () {
 		this.statusElement.innerText = "Connected.";
@@ -38,29 +38,23 @@ function Client () {
 	}.bind(this));
 
 	this.socket.on("commanddata", function (data) {
+		console.log("Commanddata", data);
 		if (!data) return;
 		//data = {
-		//    type: 0 = changeline, 1 = deleteline,
+		//    type: 0 = changeline, 1 = deleteline, 2 = setgoal
 		//    linenumber: number,
 		//    source: string
 		//}
-		sourceDom = document.getElementById("sourcefile");
-		lines = sourceDom.current_source.split("\n");
 
 		if (data.type == 0) {
-			if (Math.min(data.linenumber) !== Math.max(data.linenumber)) {
-				lines.splice(Math.min(data.linenumber), 0, data.source);
-			} else {
-				lines[data.linenumber - 1] = data.source.substring(0, 250);
-			}
+			this.changeline(data);
 		} else if (data.type == 1) {
-			lines.splice(data.linenumber - 1, 1);
+			this.deleteline(data);
+		} else if (data.type == 2) {
+			this.setgoal(data.goal);	
 		}
 
-		sourceDom.current_source = lines.join("\n");
-		sourceDom[('innerText' in sourceDom)? 'innerText' : 'textContent'] = sourceDom.current_source;
-		Prism.highlightElement(sourceDom);
-	});
+	}.bind(this));
 
 	this.socket.on("sourcefile", function (data) {
 		sourceDom = document.getElementById("sourcefile");
@@ -92,7 +86,41 @@ function Client () {
 		console.log("Voteoptions data: ", data);
 	}.bind(this));
 
+	this.socket.on("goal", function (data) {
+		this.setgoal(data);
+	}.bind(this))
+
 	this.socket.emit("asksourcefile");
 }
+
+Client.prototype.changeline = function changeline (data) {
+	sourceDom = document.getElementById("sourcefile");
+	lines = sourceDom.current_source.split("\n");
+	if (Math.min(data.linenumber) !== Math.max(data.linenumber)) {
+		lines.splice(Math.min(data.linenumber), 0, data.source);
+	} else {
+		lines[data.linenumber - 1] = data.source.substring(0, 250);
+	}
+	sourceDom.current_source = lines.join("\n");
+	sourceDom[('innerText' in sourceDom)? 'innerText' : 'textContent'] = sourceDom.current_source;
+	Prism.highlightElement(sourceDom);
+};
+
+Client.prototype.deleteline = function deleteline (data) {
+	sourceDom = document.getElementById("sourcefile");
+	lines = sourceDom.current_source.split("\n");
+	lines.splice(data.linenumber - 1, 1);
+	sourceDom.current_source = lines.join("\n");
+	sourceDom[('innerText' in sourceDom)? 'innerText' : 'textContent'] = sourceDom.current_source;
+	Prism.highlightElement(sourceDom);
+};
+
+Client.prototype.setgoal = function setgoal (data) {
+	goalDom = document.getElementById("goalmessage");
+	while (goalDom.firstChild) {
+		goalDom.removeChild(goalDom.firstChild);
+	}
+	goalDom.appendChild(document.createTextNode(data));
+};
 
 client = new Client();

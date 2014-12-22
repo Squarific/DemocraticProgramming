@@ -2,7 +2,8 @@
 <html>
 	<head>
 		<title>Democratic Programming</title>
-		<link rel="stylesheet" href="style.css?v=1">
+		<link rel="stylesheet" href="style.css?v=4">
+		<link rel="stylesheet" href="projects.css">
 		<link rel="stylesheet" href="prism.css">
 		<link href='http://fonts.googleapis.com/css?family=Orbitron:700' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Arapey' rel='stylesheet' type='text/css'>
@@ -20,17 +21,18 @@
 			</span>
 			<div style="clear:both;"></div>
 		</div>
+		<div id="goal"><span class="stronger">Current goal:</span> <span id="goalmessage"></span></div>
 		<div id="votefield" class="field"></div>
 		<div id="chat" class="field">
 			<h2>Chat/Console:</h2>
 		</div>
 		<div id="help" class="field">
-			<h1>Programming togheter</h1>
+			<h1>Programming together</h1>
 			<h2>What is Democratic Programming?</h2>
-			A webapp that lets visitors make a program by voting. <br/><br/>
+			This is the answer to what would happen if you take a group of people and ask them to make a program by voting on what to do with the source code. <br/><br/>
 			The winning option is chosen by chance, every vote makes it more likely the option will win.<br/><br/>
 			Example: if A has 500 votes and B has 300 votes then A will on average win 500 out of 800 times.<br/><br/>
-			The maximum time between votes is 5 minutes, every time someone votes this is lowered with 2 seconds untill the vote ends in 2 minutes.
+			The maximum time between votes is 3 minutes, every time someone votes this is lowered with 2 seconds untill the vote ends in 1 minutes.
 			<h2>Possible commands</h2>
 			<h3>changeline</h3>
 			This command changes or creates a line of code.<br/>
@@ -53,11 +55,42 @@
 		<div style="clear:both;"></div>
 		<pre id="sourcecode" class="line-numbers"><code id="sourcefile" class="language-python"></code></pre>
 		<div style="clear:both"></div>
-		<script src="scripts/Prism.js"></script>
+		<div class="projects">
+			<div class="subtitle">Check out some other projects:</div>
+			<a href="/" class="project" title="Squarific Homepage">
+				<img src="screens/squarific.png" alt="Squarific">
+				<div class="label">Name:</div>
+				Squarific homepage
+				<div class="label">Description:</div>
+				A collection of my best projects.
+			</a>
+			<a href="/simplelogic/" class="project" title="NeuralCar">
+				<img src="screens/simplelogic.png" alt="SimpleLogic"/>
+				<div class="label">Name:</div>
+				SimpleLogic (Open Source)
+				<div class="label">Description:</div>
+				Logic gates simulation in the browser with the ability to share modules. It's also fairly easy to create new nodes.
+			</a>
+			<a href="/neuralcar/" class="project" title="NeuralCar">
+				<img src="screens/neuralcar.png" alt="NeuralCar"/>
+				<div class="label">Name:</div>
+				NeuralCar 2.0 (Open Source)
+				<div class="label">Description:</div>
+				Second version of the car simulation. Each car has a neural network that controls it. Those then go trough generations of evolution till they can drive themself.
+			</a>
+			<a href="/drawtogheter/" class="project" title="Drawtogheter">
+				<img src="screens/drawtogheter.png" alt="Drawtogheter"/>
+				<div class="label">Name:</div>
+				Drawtogheter
+				<div class="label">Description:</div>
+				Drawing togheter while chatting online in the browser for free
+			</a>
+		</div>
+		<script src="scripts/Prism.js?v=1"></script>
 		<script src="scripts/socket.io.js"></script>
-		<script src="scripts/Poll.js"></script>
-		<script src="scripts/Chat.js"></script>
-		<script src="scripts/main.js"></script>
+		<script src="scripts/Poll.js?v=4"></script>
+		<script src="scripts/Chat.js?v=4"></script>
+		<script src="scripts/main.js?v=4"></script>
 		<!-- Go to www.addthis.com/dashboard to customize your tools -->
 		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-53c4fbf2311fe8f1"></script>
 	</body>
