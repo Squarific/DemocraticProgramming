@@ -119,9 +119,53 @@ body {
 	padding:4px;
 }
 
+.button-least {
+	display:inline-block;
+	padding:5px;
+	text-align:center;
+	background:rgb(136, 128, 103);
+	cursor:pointer;
+	color:white;
+}
+
+.button-exit {
+	font-size:24px;
+	font-weight:800;
+	font-family: 'Fira Mono', "Lucida Console", Monaco, "Courier New", Courier, monospace;
+}
+
+.button-least:hover {
+	background:rgb(96, 89, 70);
+}
+
 .stronger {
 	font-size:120%;
 	font-weight:800;
+}
+
+.run-console-container {
+	position:fixed;
+	padding:25px;
+	background:rgba(202, 198, 173, 1);
+	border:4px rgba(109, 88, 48, 0.5) solid;
+	top:40%;
+	left:40%;
+	right:40%;
+	height:20%;
+	overflow:hidden;
+	transition-duration:1s;
+}
+
+.run-console-container-opened {
+	top:20%;
+	left:15%;
+	right:15%;
+	height:auto;
+}
+
+.run-console-iframe {
+	width:100%;
+	border:none;
 }
 
 #connectionstatus, #usercount {

@@ -94,8 +94,8 @@ function Client () {
 }
 
 Client.prototype.changeline = function changeline (data) {
-	sourceDom = document.getElementById("sourcefile");
-	lines = sourceDom.current_source.split("\n");
+	var sourceDom = document.getElementById("sourcefile");
+	var lines = sourceDom.current_source.split("\n");
 	if (Math.floor(data.linenumber) !== Math.ceil(data.linenumber)) {
 		lines.splice(Math.floor(data.linenumber), 0, data.source);
 	} else {
@@ -107,8 +107,8 @@ Client.prototype.changeline = function changeline (data) {
 };
 
 Client.prototype.deleteline = function deleteline (data) {
-	sourceDom = document.getElementById("sourcefile");
-	lines = sourceDom.current_source.split("\n");
+	var sourceDom = document.getElementById("sourcefile");
+	var lines = sourceDom.current_source.split("\n");
 	lines.splice(data.linenumber - 1, 1);
 	sourceDom.current_source = lines.join("\n");
 	sourceDom[('innerText' in sourceDom)? 'innerText' : 'textContent'] = sourceDom.current_source;
@@ -116,7 +116,7 @@ Client.prototype.deleteline = function deleteline (data) {
 };
 
 Client.prototype.setgoal = function setgoal (data) {
-	goalDom = document.getElementById("goalmessage");
+	var goalDom = document.getElementById("goalmessage");
 	while (goalDom.firstChild) {
 		goalDom.removeChild(goalDom.firstChild);
 	}
@@ -127,8 +127,42 @@ Client.prototype.setUsername = function setUsername (name) {
 	this.socket.emit("changename", name);
 };
 
-Client.prototype.toggleMenu = function toggleMenu () {
+Client.prototype.createExitButton = function createExitButton () {
+	var button = document.createElement("div");
+	button.classList.add("button-least");
+	button.classList.add("button-exit");
+	button.style.float = "right";
+	button.appendChild(document.createTextNode("Exit"));
+	button.addEventListener("click", function (event) {
+		event.target.parentNode.parentNode.removeChild(event.target.parentNode);
+	});
+	return button;
+};
 
+Client.prototype.createCodeIframe = function createCodeIframe () {
+	var iframe = document.createElement("iframe");
+	iframe.addEventListener("load", function (event) {
+		this.contentWindow.postMessage(document.getElementById("sourcefile").current_source, "*");
+	}.bind(iframe))
+	iframe.src = "http://www.tazios.com/unsafe.html";
+	return iframe;
+};
+
+Client.prototype.runCode = function runCode () {
+	var runConsoleContainer = document.body.appendChild(document.createElement("div"));
+	runConsoleContainer.classList.add("run-console-container");
+	runConsoleContainer.appendChild(this.createExitButton());
+
+	var h2 = runConsoleContainer.appendChild(document.createElement("h2"));
+	h2.appendChild(document.createTextNode("Running Code"));
+
+	runConsoleContainer.targetiframe = runConsoleContainer.appendChild(this.createCodeIframe());
+	runConsoleContainer.targetiframe.contentWindow.postMessage(document.getElementById("sourcefile").current_source, "*");
+	runConsoleContainer.targetiframe.classList.add("run-console-iframe");
+
+	setTimeout(function () {
+		this.classList.add("run-console-container-opened");
+	}.bind(runConsoleContainer), 0);
 };
 
 client = new Client();

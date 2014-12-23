@@ -18,11 +18,13 @@
 			<span class="righttitle">
 				<span class="smalltitle">Status: <span id="connectionstatus">Not connected.</span></span>
 				<span class="smalltitle usercount">There are <span id="usercount">x</span> user(s)</span>
-				<span class="gearicon" onclick="client.toggleMenu()">Menu</span>
 			</span>
 			<div style="clear:both;"></div>
 		</div>
-		<div id="goal"><span class="stronger">Current goal:</span> <span id="goalmessage"></span></div>
+		<div id="goal">
+			<span class="stronger">Current goal:</span> <span id="goalmessage"></span>
+			<div class="button-least" style="float:right;" onclick="client.runCode()">Run current code</div>
+		</div>
 		<div class="field">
 			<h2>Change name</h2>
 			<input id="name-input" style="width:60%; padding:4px" placeholder="Username..." maxlength="255" />
