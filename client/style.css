@@ -52,6 +52,8 @@ body {
 	max-height:520px;
 	height:580px;
 	overflow:auto;
+	word-wrap: break-word;
+	font-family: 'Fira Mono', "Lucida Console", Monaco, "Courier New", Courier, monospace;
 }
 
 .field {
