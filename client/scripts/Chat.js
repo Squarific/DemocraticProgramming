@@ -1,5 +1,5 @@
 function Chat (container, onmessage) {
-	this.messagesDom = container.appendChild(document.createElement("div"));
+	this.messagesDom = container.appendChild(document.createElement("pre"));
 	this.messagesDom.classList.add("messagecontainer");
 
 	this.inputContainerDom = container.appendChild(document.createElement("div"));
