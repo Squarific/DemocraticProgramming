@@ -154,7 +154,7 @@ Client.prototype.runCode = function runCode () {
 	runConsoleContainer.appendChild(this.createExitButton());
 
 	var h2 = runConsoleContainer.appendChild(document.createElement("h2"));
-	h2.appendChild(document.createTextNode("Running Code"));
+	h2.appendChild(document.createTextNode("Console"));
 
 	runConsoleContainer.targetiframe = runConsoleContainer.appendChild(this.createCodeIframe());
 	runConsoleContainer.targetiframe.contentWindow.postMessage(document.getElementById("sourcefile").current_source, "*");
