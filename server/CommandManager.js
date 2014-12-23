@@ -12,7 +12,9 @@ var functions = {
 		message = message + ""; //Ensure string
 		this.repo.add("*", function () {
 			this.repo.commit(message, function () {
-				this.repo.push("origin", "master", callback);
+				this.repo.push("origin", "master", function (err) {
+					callback(undefined, {type: 3})
+				});
 			}.bind(this))
 		}.bind(this))
 	},
