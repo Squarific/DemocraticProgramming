@@ -123,4 +123,12 @@ Client.prototype.setgoal = function setgoal (data) {
 	goalDom.appendChild(document.createTextNode(data));
 };
 
+Client.prototype.setUsername = function setUsername (name) {
+	this.socket.emit("changename", name);
+};
+
+Client.prototype.toggleMenu = function toggleMenu () {
+
+};
+
 client = new Client();

@@ -51,6 +51,12 @@ Server.prototype.bindIO = function bindIO () {
 			socket.emit("sourcefile", data);
 		});
 
+		socket.on("changename", function (name) {
+			name = name.split("<").join("").split(">").join("")
+			this.sendChat("<system>", socket.name + " has changed hes name to " + name)
+			socket.name = name;
+		}.bind(this));
+
 		socket.on("vote", function (option, callback) {
 			callback = callback || emptyfunction;
 
@@ -61,7 +67,7 @@ Server.prototype.bindIO = function bindIO () {
 				// if that doesn't go below the minimum wait
 				if (this.timeTillNextVote - Date.now() > this.settings.lowerVoteTimeAbove) {
 					this.timeTillNextVote -= this.settings.lowerVoteTimeWith;
-				}
+		6		}
 
 				this.io.emit("vote", {
 					option: option,
