@@ -30,9 +30,12 @@ Server.prototype.bindIO = function bindIO () {
 	console.log("Server started.");
 
 	this.io.on("connection", function (socket) {
+		console.log(socket)
+		if (socket.handshake.headers.referer && socket.handshake.headers.referer.indexOf("unsafe.html") > -1) socket.disconnect();
 		socket.name = this.generateName();
 		socket.emit("timebetweenvotes", this.settings.timeBetweenVotes);
 		socket.emit("goal", this.current_goal);
+		console.log(socket);
 
 		if (this.current_command) {
 			socket.emit("chat", {
