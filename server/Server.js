@@ -18,7 +18,7 @@ function Server (io, commandManager, voteManager, settings) {
 
 	// Vote on a new command
 	this.voteManager.setOptions(this.commandManager.commandList);
-	this.doNextVote();
+	this.doNextVote(this.settings.timeBetweenVotes);
 	this.voteUpdateTimeout = setTimeout(this.voteupdate.bind(this), 2000);
 }
 
@@ -132,7 +132,7 @@ Server.prototype.voteupdate = function voteupdate () {
 				console.log("No valid vote casted, giving more time.");
 				this.sendChat("<System>", "No valid vote casted, giving more time.");
 				this.timeTillNextVote += this.settings.timeBetweenVotes;
-				this.doNextVote();
+				this.doNextVote(this.settings.timeBetweenVotes);
 				this.voteUpdateTimeout = setTimeout(this.voteupdate.bind(this), 2000);
 				return;
 			}
@@ -162,7 +162,7 @@ Server.prototype.voteOnNewCommand = function voteOnNewCommand () {
 	this.current_command = "";
 	this.current_parameters = [];
 	this.voteManager.setOptions(this.commandManager.commandList);
-	this.doNextVote();
+	this.doNextVote(this.settings.timeBetweenVotes);
 };
 
 Server.prototype.executeCurrentCommand = function executeCurrentCommand () {
@@ -183,7 +183,7 @@ Server.prototype.executeCurrentCommand = function executeCurrentCommand () {
 	} else {
 		// Allow a vote on any string since we still need a parameter
 		this.voteManager.setOptions([]);
-		this.doNextVote();
+		this.doNextVote(this.settings.timeBetweenParamVotes);
 	}
 };
 
@@ -194,9 +194,9 @@ Server.prototype.sendChat = function sendChat (user, message) {
 	});
 };
 
-Server.prototype.doNextVote = function doNextVote () {
+Server.prototype.doNextVote = function doNextVote (timebetween) {
 	// Prepare for the next vote
-	this.timeTillNextVote = Date.now() + this.settings.timeBetweenVotes;
+	this.timeTillNextVote = Date.now() + timebetween;
 	this.sendVoteOptions();
 };
 

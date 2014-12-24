@@ -22,8 +22,9 @@ var functions = {
 		fs.readFile(this.filename, {encoding: "utf8"}, function (err, data) {
 			lines = data.split("\n");
 			linenumber = parseFloat(linenumber);
-			linenumber = Math.min(1000, linenumber);
+			linenumber = Math.min(Math.min(1000, lines.length + 5), linenumber);
 			code = code + "" //Ensure code is a string
+			code = code.split("\n").join(" "); //Escape new lines
 
 			if (isNaN(linenumber)) {
 				callback("That is not parseable as a number!");

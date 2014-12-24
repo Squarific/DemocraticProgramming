@@ -5,12 +5,15 @@ function Client () {
 		this.socket.emit("chat", message);
 	}.bind(this));
 
-	this.socket = io('http://democraticprogramming.squarific.com:8080');
-	//this.socket = io('http://127.0.0.1:8080');
+	//this.socket = io('http://democraticprogramming.squarific.com:8080');
+	this.socket = io('http://127.0.0.1:8080');
 
 	this.socket.on("connect", function () {
 		this.statusElement.innerText = "Connected.";
 		document.body.classList.add("connected");
+		if (name = localStorage.getItem("sdp-username")) {
+			this.socket.emit("changename", name);
+		}
 	}.bind(this));
 
 	this.socket.on("reconnect", function () {
@@ -29,6 +32,7 @@ function Client () {
 			votefield.removeChild(votefield.lastChild);
 		}
 
+		if (this.poll) this.poll.stopped = true;
 		this.poll = new Poll(timebetween, votefield, function (option) {
 			this.socket.emit("vote", option, function (data) {
 				this.poll.statusTextDom.innerHTML = "<h2>You have voted for: " + data + "</h2>";
@@ -125,6 +129,7 @@ Client.prototype.setgoal = function setgoal (data) {
 
 Client.prototype.setUsername = function setUsername (name) {
 	this.socket.emit("changename", name);
+	localStorage.setItem("sdp-username", name);
 };
 
 Client.prototype.createExitButton = function createExitButton () {

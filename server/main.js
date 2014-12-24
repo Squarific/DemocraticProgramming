@@ -16,7 +16,8 @@ function startServer (port, file, repo) {
 		new VoteManager(), {
 			lowerVoteTimeAbove:  30 * 1000,
 			lowerVoteTimeWith: 10 * 1000,
-			timeBetweenVotes:  2 * 60 * 1000
+			timeBetweenVotes:  2 * 60 * 1000,
+			timeBetweenParamVotes: 1 * 60 * 1000
 		}
 	);
 }

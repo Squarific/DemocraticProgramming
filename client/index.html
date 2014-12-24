@@ -40,14 +40,14 @@
 			This is the answer to what would happen if you take a group of people and ask them to make a program by voting on what to do with the source code. <br/><br/>
 			The winning option is chosen by chance, every vote makes it more likely the option will win.<br/><br/>
 			Example: if A has 500 votes and B has 300 votes then A will on average win 500 out of 800 times.<br/><br/>
-			The maximum time between votes is 3 minutes, every time someone votes this is lowered with 2 seconds untill the vote ends in 1 minutes.
+			The maximum time between votes is 2 minutes for commands and 1 minute for parameters, every time someone votes this is lowered with 2 seconds untill the vote ends in 30 seconds.
 			<h2>Possible commands</h2>
 			<h3>changeline</h3>
 			This command changes or creates a line of code.<br/>
-			The first argument will be the code inserted at the given line (max length: 250 chars). <br/>
-			The second argument is the line number, if it is an integer the specified line will be changed.<br/>
+			The first argument is the line number, if it is an integer the specified line will be changed.<br/>
 			If it is a float then a new line will be inserted between floor(line number) and ceil(line number)<br/>
 			Max linenumber: 1000, if higher defaults back to 1000
+			The second argument is be the code inserted at the given line (max length: 250 chars). <br/>
 			<h3>deleteline</h3>
 			This command deletes a line of code <br/>
 			The first argument is the line number at which to delete a line.
@@ -96,9 +96,9 @@
 		</div>
 		<script src="scripts/Prism.js?v=2"></script>
 		<script src="scripts/socket.io.js"></script>
-		<script src="scripts/Poll.js?v=6"></script>
+		<script src="scripts/Poll.js?v=9"></script>
 		<script src="scripts/Chat.js?v=6"></script>
-		<script src="scripts/main.js?v=9"></script>
+		<script src="scripts/main.js?v=12"></script>
 		<!-- Go to www.addthis.com/dashboard to customize your tools -->
 		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-53c4fbf2311fe8f1"></script>
 	</body>

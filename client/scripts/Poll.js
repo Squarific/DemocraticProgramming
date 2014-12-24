@@ -47,7 +47,9 @@ function Poll (timebetween, container, votecallback) {
 Poll.prototype.update = function update () {
 	this.pollTimeDom.style.width = Math.max((this.timeTillNextVote - Date.now()) / this.timebetween, 0) * 100 + "%";
 	this.pollTimeDom.innerHTML = Math.max(Math.round((this.timeTillNextVote - Date.now()) / 1000), 0) + " seconds left.";
-	requestAnimationFrame(this.update.bind(this));
+	document.title = Math.max(Math.round((this.timeTillNextVote - Date.now()) / 1000), 0) + " seconds left. DemPro"
+	if (this.stopped) return;
+	setTimeout(this.update.bind(this), 200);
 };
 
 Poll.prototype.createPollTimeDom = function createPollTimeDom (container) {
